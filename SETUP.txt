@@ -1,0 +1,52 @@
+PACE MOBILE APP - ONE-TIME SETUP  (about 15 minutes)
+=====================================================
+How it works:  PACE (shop PC)  --Day End-->  Google Apps Script  -->  Google Drive (your account)
+                                                  ^
+               PACE Mobile app (phone) -----------+  reads the latest data (read-only)
+
+STEP 1 - Secret key (in PACE)
+  Settings > Advance Settings > Mobile App Sync > press "Generate". Note the key.
+
+STEP 2 - Google Apps Script (the "server", free, in your Google account)
+  1. Open https://script.google.com  > New project. Name it "PACE Sync".
+  2. Delete everything in Code.gs and paste the full contents of the file  Code.gs  (in this folder).
+  3. In line  const SECRET = 'PASTE-YOUR-SECRET-KEY-HERE';  put the key from Step 1.
+  4. Save. Deploy > New deployment > gear icon > "Web app".
+       Execute as: Me        Who has access: Anyone
+     Deploy > Authorize access > choose your Google account > Advanced > Go to PACE Sync > Allow.
+  5. Copy the "Web app URL" (ends with /exec).
+
+STEP 3 - Connect PACE
+  Paste the URL in Settings > Advance Settings > Mobile App Sync > Sync URL.
+  Press "Save & Sync Now". You should see "Mobile app synced".
+  From now on data is sent automatically after every Day End Closing.
+  (Tick "Also send full database copy" for a free off-site backup in Google Drive.)
+
+STEP 4 - Put the mobile app online (GitHub Pages, free)
+  1. Create a free account at https://github.com  > New repository, e.g. "pace-mobile" (Public).
+  2. "uploading an existing file" > drag ALL files of this folder EXCEPT Code.gs and SETUP.txt:
+        index.html, app.js, sw.js, manifest.webmanifest, icon-192.png, icon-512.png
+     > Commit changes.
+  3. Repository Settings > Pages > Source: "Deploy from a branch" > Branch: main, folder / (root) > Save.
+  4. After 1-2 minutes the app is at  https://<your-github-name>.github.io/pace-mobile/
+     (One app link can be used by all your PACE customers - each phone connects to its own shop.)
+
+STEP 5 - Install on the phone
+  Open the GitHub Pages link in Chrome (Android) or Safari (iPhone).
+  Enter the Sync URL and Secret key > Save & Load Data.
+  Chrome menu > "Add to Home screen" / Safari Share > "Add to Home Screen".
+  The app opens like a normal app and shows the last synced data even without internet.
+
+SECURITY
+  * Data stays in the shop owner's Google Drive (folder "PACE Mobile Sync").
+  * Without the secret key nobody can read it. Keep the URL + key private.
+  * To block an old phone: change the key in PACE and in Code.gs (Deploy > Manage deployments > Edit > New version).
+
+UPDATING THE MOBILE APP (new version of PACE)
+  Upload the new index.html, app.js, sw.js (and icons/manifest if changed) to the same GitHub repository
+  (Add file > Upload files > Commit). Phones show "New version available - Upgrade now" by themselves;
+  More > "Reload latest version" also forces it. Code.gs does NOT need to change for version 10.
+  The phone keeps the bill list for the last 60 days and ledgers / expense entries for the last 90 days
+  (to keep the app fast); totals are for the whole financial year.
+
+UPDATING Code.gs later: Deploy > Manage deployments > Edit (pencil) > Version: New version > Deploy (URL stays the same).
